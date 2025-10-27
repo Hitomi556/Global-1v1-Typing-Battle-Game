@@ -1,21 +1,252 @@
-```txt
-npm install
-npm run dev
-```
+# NEONCRYPT - Global Typing Battle
 
-```txt
+## プロジェクト概要
+- **名前**: NeonCrypt
+- **目標**: サイバーパンクスタイルの1v1タイピング＆パズルバトルゲーム
+- **主な機能**:
+  - グローバルプレイヤー対戦（1日1回）
+  - 友達との無制限対戦
+  - AIオポネント自動マッチング
+  - 国別リーダーボード
+  - ダークネオンUIデザイン
+  - ハッカースタイルのサウンドエフェクト
+
+## 現在実装済みの機能
+
+### ✅ 完成済み
+1. **ウェルカム画面**
+   - ニックネーム入力
+   - 国選択（REST Countries API連携）
+   - 難易度選択（Easy/Normal/Hard）
+   - ランダムマッチ/フレンドバトルモード選択
+
+2. **ゲームプレイ**
+   - タイピングチャレンジ（文章を正確に入力）
+   - 多肢選択問題
+   - ラウンドシステム（難易度によって1-3ラウンド）
+   - スコアシステム
+   - 勝敗判定
+
+3. **リーダーボード**
+   - 今日のランキング
+   - 過去7日間のランキング
+   - 国別統計（試合数、勝利数、敗北数、勝率）
+
+4. **サウンドシステム**
+   - タイピング音（Web Audio API）
+   - 正解音
+   - 不正解音
+   - 音量コントロール
+   - ON/OFFトグル
+
+5. **データベース（Cloudflare D1）**
+   - ユーザー管理
+   - マッチ結果保存
+   - 国別統計
+
+6. **サイバーパンクUI**
+   - ダークテーマ
+   - ネオングリーン/シアン/ピンクのアクセント
+   - グリッチエフェクト
+   - モノスペースフォント（Share Tech Mono）
+   - グリッドパターン背景
+
+### 📋 機能一覧と対応URI
+
+#### API エンドポイント
+- `POST /api/match/world` - ワールドバトル開始
+  - パラメータ: `{ nickname, countryCode, countryName, difficulty }`
+  - レスポンス: マッチ情報、オポネント情報
+  
+- `POST /api/match/result` - マッチ結果保存
+  - パラメータ: `{ userId, nickname, countryCode, countryName, matchType, difficulty, opponentType, opponentNickname, result, score, completedRounds }`
+  - レスポンス: 保存成功/失敗
+  
+- `GET /api/leaderboard` - リーダーボード取得
+  - レスポンス: `{ today: [...], last7days: [...] }`
+
+#### フロントエンド画面
+- `/` - メイン画面
+  - `#welcome-screen` - ウェルカム画面
+  - `#game-screen` - ゲーム画面
+  - `#leaderboard-screen` - リーダーボード画面
+
+## 未実装の機能
+
+### ⏳ 今後の実装予定
+1. **マルチプレイヤーマッチング**
+   - 現在はAI対戦のみ
+   - リアルタイムプレイヤーマッチング機能
+
+2. **より高度なAI**
+   - 難易度別のAI応答速度
+   - より自然な対戦体験
+
+3. **追加のゲームモード**
+   - トーナメントモード
+   - タイムアタックモード
+   - エンドレスモード
+
+4. **プロフィールシステム**
+   - ユーザー統計
+   - 実績システム
+   - レベルシステム
+
+5. **チャット機能**
+   - 試合前のクイックチャット
+   - エモート
+
+6. **モバイル最適化**
+   - タッチ操作の改善
+   - レスポンシブデザインの強化
+
+## 推奨される次のステップ
+
+1. **リアルタイムマッチング実装**
+   - Cloudflare Durable Objectsの活用
+   - WebSocket接続の実装
+
+2. **AI難易度調整**
+   - 難易度別のタイピング速度シミュレーション
+   - 問題の回答時間調整
+
+3. **実績システム追加**
+   - 連勝記録
+   - 特殊な実績バッジ
+
+4. **問題データベース拡張**
+   - より多くの文章バリエーション
+   - カテゴリ別の問題
+
+## URLs
+
+### 開発環境
+- **ローカル開発**: https://3000-ikc557wguicxugfvxwd98-3844e1b6.sandbox.novita.ai
+- **API Base**: Same as above
+
+### 本番環境
+- **本番デプロイ**: 未デプロイ（Cloudflare Pagesにデプロイ可能）
+
+## データアーキテクチャ
+
+### データモデル
+
+#### Users テーブル
+- `id` (TEXT, PRIMARY KEY) - ユーザーID
+- `nickname` (TEXT) - ニックネーム
+- `country_code` (TEXT) - 国コード（ISO 3166-1 alpha-2）
+- `country_name` (TEXT) - 国名
+- `last_world_battle_date` (TEXT) - 最後のワールドバトル日付
+- `created_at` (DATETIME) - 作成日時
+
+#### Match Results テーブル
+- `id` (INTEGER, PRIMARY KEY AUTOINCREMENT) - マッチID
+- `user_id` (TEXT) - ユーザーID
+- `nickname` (TEXT) - ニックネーム
+- `country_code` (TEXT) - 国コード
+- `country_name` (TEXT) - 国名
+- `match_type` (TEXT) - マッチタイプ（world/friend）
+- `difficulty` (TEXT) - 難易度（easy/normal/hard）
+- `opponent_type` (TEXT) - オポネントタイプ（player/ai）
+- `opponent_nickname` (TEXT) - オポネントニックネーム
+- `result` (TEXT) - 結果（win/loss）
+- `score` (INTEGER) - スコア
+- `completed_rounds` (INTEGER) - 完了ラウンド数
+- `created_at` (DATETIME) - 作成日時
+
+#### Country Stats テーブル
+- `country_code` (TEXT, PRIMARY KEY) - 国コード
+- `country_name` (TEXT) - 国名
+- `total_matches` (INTEGER) - 総試合数
+- `total_wins` (INTEGER) - 総勝利数
+- `total_losses` (INTEGER) - 総敗北数
+- `matches_last_7_days` (INTEGER) - 過去7日間の試合数
+- `wins_last_7_days` (INTEGER) - 過去7日間の勝利数
+- `losses_last_7_days` (INTEGER) - 過去7日間の敗北数
+- `matches_today` (INTEGER) - 今日の試合数
+- `wins_today` (INTEGER) - 今日の勝利数
+- `losses_today` (INTEGER) - 今日の敗北数
+- `last_updated` (DATETIME) - 最終更新日時
+
+### ストレージサービス
+- **Cloudflare D1**: SQLiteベースのグローバル分散データベース
+- **ローカル開発**: `.wrangler/state/v3/d1` に自動作成されるローカルSQLite
+
+### データフロー
+1. ユーザーがニックネームと国を入力
+2. ワールドバトルの場合、1日1回の制限をチェック
+3. マッチ開始（現在はAI対戦）
+4. ゲームプレイ（タイピング + 問題回答）
+5. 結果をD1データベースに保存
+6. ワールドバトルの場合のみ国別統計を更新
+7. リーダーボードでは集計されたデータを表示
+
+## ユーザーガイド
+
+### 初めての方へ
+1. **ニックネームを入力**: 好きなハンドルネーム（例: pixel_hacker）
+2. **国を選択**: 国名を入力すると候補が表示されます
+3. **難易度を選択**:
+   - **Easy**: 1文章のみ
+   - **Normal**: 2文章（デフォルト）
+   - **Hard**: 3文章
+4. **モード選択**:
+   - **Random Match**: ワールドバトル（1日1回）
+   - **Play with Friend**: 友達バトル（無制限）
+
+### ゲームの遊び方
+1. 画面に表示された文章を**正確に**入力します
+2. 入力が完了すると問題が表示されます
+3. 正しい答えを選択してください
+4. **間違えるとゲームオーバー**です
+5. すべてのラウンドをクリアすると勝利！
+
+### リーダーボード
+- **Today's Rankings**: 今日のランキング
+- **Last 7 Days Rankings**: 過去7日間のランキング
+- 各国の試合数、勝利数、敗北数、勝率が表示されます
+- フレンドバトルの結果は含まれません
+
+## デプロイメント
+
+### プラットフォーム
+- **Cloudflare Pages**
+
+### ステータス
+- ✅ ローカル開発環境: 稼働中
+- ❌ 本番環境: 未デプロイ
+
+### 技術スタック
+- **バックエンド**: Hono (v4.10.3)
+- **データベース**: Cloudflare D1 (SQLite)
+- **フロントエンド**: Vanilla JavaScript + HTML5 + CSS3
+- **フォント**: Orbitron, Share Tech Mono
+- **外部API**: REST Countries API
+- **デプロイ**: Cloudflare Pages + Wrangler
+
+### 最終更新
+- **日付**: 2025-10-27
+
+## 開発コマンド
+
+```bash
+# ローカル開発サーバー起動
+npm run build
+npm run clean-port
+pm2 start ecosystem.config.cjs
+
+# データベース操作
+npm run db:migrate:local    # ローカルマイグレーション実行
+npm run db:console:local    # ローカルDBコンソール
+
+# Git操作
+npm run git:commit "message"  # コミット
+npm run git:status            # ステータス確認
+npm run git:log               # ログ確認
+
+# 本番デプロイ（未設定）
 npm run deploy
 ```
 
-[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
-
-```txt
-npm run cf-typegen
-```
-
-Pass the `CloudflareBindings` as generics when instantiation `Hono`:
-
-```ts
-// src/index.ts
-const app = new Hono<{ Bindings: CloudflareBindings }>()
-```
+## ライセンス
+このプロジェクトは学習および実験目的で作成されています。
