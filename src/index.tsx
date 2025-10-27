@@ -228,6 +228,10 @@ app.get('/', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEONCRYPT - Global Typing Battle</title>
     <link rel="stylesheet" href="/static/styles.css">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -262,6 +266,13 @@ app.get('/', (c) => {
                 <p class="welcome-text">
                     Tip: If no match is found, you'll be paired with an AI bot tuned to your difficulty.
                 </p>
+                
+                <div id="firebase-status" style="margin-top: 20px; padding: 10px; background: rgba(255, 165, 0, 0.1); border: 1px solid rgba(255, 165, 0, 0.5); display: none;">
+                    <div style="color: #ffa500; font-size: 0.9rem; text-align: center;">
+                        ⚠️ Firebase not configured - AI opponent mode only<br>
+                        <span style="font-size: 0.8rem;">See FIREBASE_SETUP.md for real-time matching setup</span>
+                    </div>
+                </div>
 
                 <div class="input-group">
                     <label class="input-label">Nickname</label>

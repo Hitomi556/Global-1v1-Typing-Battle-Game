@@ -2,6 +2,55 @@
 const API_BASE = '';
 const COUNTRIES_API = 'https://restcountries.com/v3.1';
 
+// Firebase Configuration
+// ユーザーはFirebase Consoleから取得したConfigをここに貼り付ける必要があります
+const FIREBASE_CONFIG = {
+  apiKey: "REPLACE_WITH_YOUR_API_KEY",
+  authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+  databaseURL: "REPLACE_WITH_YOUR_DATABASE_URL",
+  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket: "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
+  appId: "REPLACE_WITH_YOUR_APP_ID"
+};
+
+let firebaseApp = null;
+let database = null;
+
+// Initialize Firebase
+function initFirebase() {
+  try {
+    // Check if Firebase config is set
+    if (FIREBASE_CONFIG.apiKey === "REPLACE_WITH_YOUR_API_KEY") {
+      console.warn('Firebase not configured - using AI opponent mode only');
+      console.info('See FIREBASE_SETUP.md for setup instructions');
+      
+      // Show warning in UI
+      const statusDiv = document.getElementById('firebase-status');
+      if (statusDiv) {
+        statusDiv.style.display = 'block';
+      }
+      
+      return false;
+    }
+    
+    firebaseApp = firebase.initializeApp(FIREBASE_CONFIG);
+    database = firebase.database();
+    console.log('✅ Firebase initialized successfully - Real-time matching enabled!');
+    return true;
+  } catch (error) {
+    console.error('Firebase initialization failed:', error);
+    
+    // Show warning in UI
+    const statusDiv = document.getElementById('firebase-status');
+    if (statusDiv) {
+      statusDiv.style.display = 'block';
+    }
+    
+    return false;
+  }
+}
+
 // Sound management
 const sounds = {
   typing: null,
@@ -68,11 +117,207 @@ const gameState = {
     interval: null,
     elapsed: 0
   },
-  typingStarted: false
+  typingStarted: false,
+  matchId: null,
+  isHost: false,
+  opponentConnected: false,
+  gameDataRef: null,
+  listeners: []
+};
+
+// Matching system using Firebase
+const MatchingSystem = {
+  async findMatch(userId, nickname, countryCode, countryName, difficulty) {
+    if (!database) {
+      console.log('Firebase not available, using AI opponent');
+      return {
+        type: 'ai',
+        opponent: { type: 'ai', nickname: 'AI_Bot' }
+      };
+    }
+    
+    const matchingRef = database.ref('matching');
+    const timestamp = Date.now();
+    
+    // Look for available matches with same difficulty
+    const snapshot = await matchingRef
+      .orderByChild('difficulty')
+      .equalTo(difficulty)
+      .limitToFirst(10)
+      .once('value');
+    
+    const availableMatches = [];
+    snapshot.forEach(child => {
+      const match = child.val();
+      // Check if match is still available (less than 30 seconds old)
+      if (match.status === 'waiting' && 
+          match.userId !== userId && 
+          timestamp - match.timestamp < 30000) {
+        availableMatches.push({ id: child.key, ...match });
+      }
+    });
+    
+    if (availableMatches.length > 0) {
+      // Join existing match
+      const match = availableMatches[0];
+      const matchId = match.id;
+      
+      // Update match status
+      await matchingRef.child(matchId).update({
+        status: 'matched',
+        player2Id: userId,
+        player2Nickname: nickname,
+        player2Country: countryCode
+      });
+      
+      // Create game room
+      const gameRef = database.ref(`games/${matchId}`);
+      await gameRef.set({
+        status: 'ready',
+        difficulty: difficulty,
+        player1: {
+          id: match.userId,
+          nickname: match.nickname,
+          country: match.country,
+          score: 0,
+          round: 0,
+          ready: false
+        },
+        player2: {
+          id: userId,
+          nickname: nickname,
+          country: countryCode,
+          score: 0,
+          round: 0,
+          ready: false
+        },
+        createdAt: timestamp
+      });
+      
+      return {
+        type: 'player',
+        matchId: matchId,
+        isHost: false,
+        opponent: {
+          type: 'player',
+          nickname: match.nickname,
+          country: match.country
+        }
+      };
+    } else {
+      // Create new match and wait
+      const newMatchRef = matchingRef.push();
+      await newMatchRef.set({
+        userId: userId,
+        nickname: nickname,
+        country: countryCode,
+        difficulty: difficulty,
+        status: 'waiting',
+        timestamp: timestamp
+      });
+      
+      const matchId = newMatchRef.key;
+      
+      // Wait for opponent (max 10 seconds)
+      return new Promise((resolve) => {
+        let timeout;
+        const checkInterval = setInterval(async () => {
+          const matchSnapshot = await newMatchRef.once('value');
+          const matchData = matchSnapshot.val();
+          
+          if (matchData && matchData.status === 'matched') {
+            clearInterval(checkInterval);
+            clearTimeout(timeout);
+            
+            resolve({
+              type: 'player',
+              matchId: matchId,
+              isHost: true,
+              opponent: {
+                type: 'player',
+                nickname: matchData.player2Nickname,
+                country: matchData.player2Country
+              }
+            });
+          }
+        }, 500);
+        
+        // Timeout after 10 seconds - use AI opponent
+        timeout = setTimeout(async () => {
+          clearInterval(checkInterval);
+          await newMatchRef.remove();
+          
+          resolve({
+            type: 'ai',
+            opponent: { type: 'ai', nickname: 'AI_Bot' }
+          });
+        }, 10000);
+      });
+    }
+  },
+  
+  async setupGameListeners(matchId, isHost) {
+    if (!database) return;
+    
+    const gameRef = database.ref(`games/${matchId}`);
+    gameState.gameDataRef = gameRef;
+    
+    const playerKey = isHost ? 'player2' : 'player1';
+    const opponentRef = gameRef.child(playerKey);
+    
+    // Listen to opponent's score changes
+    const scoreListener = opponentRef.child('score').on('value', (snapshot) => {
+      const score = snapshot.val();
+      if (score !== null) {
+        gameState.opponentScore = score;
+        updateScoreDisplay();
+      }
+    });
+    
+    // Listen to opponent's round changes
+    const roundListener = opponentRef.child('round').on('value', (snapshot) => {
+      const round = snapshot.val();
+      if (round !== null) {
+        console.log(`Opponent completed round ${round}`);
+      }
+    });
+    
+    // Listen to game status
+    const statusListener = gameRef.child('status').on('value', (snapshot) => {
+      const status = snapshot.val();
+      if (status === 'finished') {
+        console.log('Game finished');
+      }
+    });
+    
+    gameState.listeners.push(
+      { ref: opponentRef.child('score'), listener: scoreListener },
+      { ref: opponentRef.child('round'), listener: roundListener },
+      { ref: gameRef.child('status'), listener: statusListener }
+    );
+  },
+  
+  async updatePlayerData(matchId, isHost, data) {
+    if (!database) return;
+    
+    const playerKey = isHost ? 'player1' : 'player2';
+    const gameRef = database.ref(`games/${matchId}/${playerKey}`);
+    await gameRef.update(data);
+  },
+  
+  cleanup() {
+    // Remove all listeners
+    gameState.listeners.forEach(({ ref, listener }) => {
+      ref.off('value', listener);
+    });
+    gameState.listeners = [];
+    gameState.gameDataRef = null;
+  }
 };
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', async () => {
+  initFirebase();
   initSounds();
   setupEventListeners();
   loadCountries();
@@ -283,6 +528,10 @@ async function startWorldBattle() {
   }
   
   try {
+    // Show matching status
+    updateStatus('searching...');
+    
+    // Check daily limit
     const response = await fetch(`${API_BASE}/api/match/world`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -298,6 +547,7 @@ async function startWorldBattle() {
     
     if (!response.ok) {
       alert(data.error || 'Failed to start match');
+      updateStatus('idle');
       return;
     }
     
@@ -309,10 +559,34 @@ async function startWorldBattle() {
     };
     localStorage.setItem('neoncrypt_user', JSON.stringify(gameState.user));
     
+    // Find match using Firebase
+    const matchResult = await MatchingSystem.findMatch(
+      data.userId,
+      nickname,
+      gameState.selectedCountry.code,
+      gameState.selectedCountry.name,
+      gameState.difficulty
+    );
+    
+    if (matchResult.type === 'player') {
+      gameState.matchId = matchResult.matchId;
+      gameState.isHost = matchResult.isHost;
+      
+      // Setup Firebase listeners
+      await MatchingSystem.setupGameListeners(matchResult.matchId, matchResult.isHost);
+      
+      updateStatus('matched!');
+    } else {
+      updateStatus('vs AI');
+    }
+    
     gameState.currentMatch = {
       type: 'world',
       difficulty: gameState.difficulty,
-      opponent: data.opponent
+      opponent: matchResult.opponent,
+      matchId: matchResult.matchId,
+      isHost: matchResult.isHost,
+      realtime: matchResult.type === 'player'
     };
     
     showScreen('game-screen');
@@ -320,6 +594,7 @@ async function startWorldBattle() {
   } catch (error) {
     console.error('Match error:', error);
     alert('Failed to start match. Please try again.');
+    updateStatus('idle');
   }
 }
 
@@ -354,7 +629,7 @@ async function startFriendBattle() {
   showMainMenu();
 }
 
-function startGame() {
+async function startGame() {
   gameState.currentRound = 0;
   gameState.score = 0;
   gameState.opponentScore = 0;
@@ -370,6 +645,15 @@ function startGame() {
   // Reset scores display
   document.getElementById('player-score').textContent = '0';
   document.getElementById('opponent-score').textContent = '0';
+  
+  // Mark player as ready in Firebase
+  if (gameState.matchId && gameState.currentMatch?.realtime) {
+    await MatchingSystem.updatePlayerData(gameState.matchId, gameState.isHost, {
+      ready: true,
+      score: 0,
+      round: 0
+    });
+  }
   
   nextRound();
 }
@@ -399,8 +683,10 @@ function nextRound() {
   // Hide question section
   document.getElementById('question-section').style.display = 'none';
   
-  // Simulate opponent typing (with random delay)
-  simulateOpponentProgress();
+  // Simulate opponent typing only in AI mode
+  if (!gameState.currentMatch?.realtime) {
+    simulateOpponentProgress();
+  }
 }
 
 function generateRandomSentence() {
@@ -419,7 +705,7 @@ function generateRandomSentence() {
   return sentences[Math.floor(Math.random() * sentences.length)];
 }
 
-function handleTypingInput(e) {
+async function handleTypingInput(e) {
   const input = e.target.value;
   const target = document.getElementById('sentence-display').textContent;
   
@@ -434,6 +720,14 @@ function handleTypingInput(e) {
     gameState.score += 10;
     updateScoreDisplay();
     e.target.disabled = true;
+    
+    // Update Firebase
+    if (gameState.matchId && gameState.currentMatch?.realtime) {
+      await MatchingSystem.updatePlayerData(gameState.matchId, gameState.isHost, {
+        score: gameState.score
+      });
+    }
+    
     showQuestion();
   }
 }
@@ -491,17 +785,25 @@ function showQuestion() {
   }
 }
 
-function handleAnswer(answer) {
+async function handleAnswer(answer) {
   if (answer === gameState.currentQuestion.correct) {
     playSound('correct');
     gameState.score += 5;
     updateScoreDisplay();
     
-    // Simulate opponent answering question
-    setTimeout(() => {
-      gameState.opponentScore += 5;
-      updateScoreDisplay();
-    }, 500 + Math.random() * 1000);
+    // Update Firebase
+    if (gameState.matchId && gameState.currentMatch?.realtime) {
+      await MatchingSystem.updatePlayerData(gameState.matchId, gameState.isHost, {
+        score: gameState.score,
+        round: gameState.currentRound
+      });
+    } else {
+      // Simulate opponent answering question (AI mode only)
+      setTimeout(() => {
+        gameState.opponentScore += 5;
+        updateScoreDisplay();
+      }, 500 + Math.random() * 1000);
+    }
     
     nextRound();
   } else {
@@ -513,6 +815,17 @@ function handleAnswer(answer) {
 async function endGame(won) {
   stopTimer();
   
+  // Update Firebase game status
+  if (gameState.matchId && gameState.currentMatch?.realtime) {
+    await MatchingSystem.updatePlayerData(gameState.matchId, gameState.isHost, {
+      finished: true,
+      won: won
+    });
+    
+    // Cleanup Firebase listeners
+    MatchingSystem.cleanup();
+  }
+  
   document.getElementById('game-play').style.display = 'none';
   document.getElementById('game-result').style.display = 'block';
   
@@ -523,12 +836,15 @@ async function endGame(won) {
   const minutes = Math.floor(finalTime / 60);
   const seconds = finalTime % 60;
   
+  const matchType = gameState.currentMatch?.realtime ? 'Real Player' : 'AI';
+  
   resultTitle.textContent = won ? '🎉 VICTORY!' : '💥 DEFEAT';
   resultTitle.style.color = won ? '#00ff41' : '#ff0051';
   resultScore.innerHTML = `
     <div>Your Score: ${gameState.score}</div>
     <div>Opponent Score: ${gameState.opponentScore}</div>
     <div style="margin-top: 10px;">Time: ${minutes}:${seconds.toString().padStart(2, '0')}</div>
+    <div style="margin-top: 5px; color: var(--neon-cyan); font-size: 0.9rem;">vs ${matchType}</div>
   `;
   
   // Save result if world battle
@@ -623,6 +939,11 @@ function showMainMenu() {
   
   // Reset timer
   resetTimer();
+  
+  // Cleanup Firebase listeners
+  MatchingSystem.cleanup();
+  gameState.matchId = null;
+  gameState.isHost = false;
   
   if (gameState.user) {
     document.getElementById('player-info').innerHTML = `
