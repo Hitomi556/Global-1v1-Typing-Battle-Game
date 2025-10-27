@@ -228,6 +228,7 @@ app.get('/', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NEONCRYPT - Global Typing Battle</title>
     <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -302,7 +303,11 @@ app.get('/', (c) => {
         <div id="game-screen" class="screen">
             <div class="game-container">
                 <!-- Player Info -->
-                <div id="player-info" class="player-info"></div>
+                <div id="player-info" class="player-info">
+                    <button id="logout-btn" class="logout-btn" title="Change Player">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
 
                 <!-- Game Menu -->
                 <div id="game-menu" class="welcome-content">

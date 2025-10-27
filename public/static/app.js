@@ -451,6 +451,7 @@ function setupEventListeners() {
     btn.addEventListener('click', showMainMenu);
   });
   document.getElementById('play-again').addEventListener('click', showMainMenu);
+  document.getElementById('logout-btn').addEventListener('click', logout);
 }
 
 async function loadCountries() {
@@ -947,6 +948,9 @@ function showMainMenu() {
   
   if (gameState.user) {
     document.getElementById('player-info').innerHTML = `
+      <button id="logout-btn" class="logout-btn" title="Change Player">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
       <div class="player-card">
         <img src="https://flagcdn.com/24x18/${gameState.user.countryCode.toLowerCase()}.png" 
              alt="${gameState.user.countryName}" class="flag-icon">
@@ -954,7 +958,44 @@ function showMainMenu() {
         <span class="player-country">${gameState.user.countryName}</span>
       </div>
     `;
+    
+    // Re-attach logout button listener
+    document.getElementById('logout-btn').addEventListener('click', logout);
   }
+}
+
+function logout() {
+  // Confirm logout
+  if (!confirm('Are you sure you want to logout and return to the welcome screen?')) {
+    return;
+  }
+  
+  // Cleanup Firebase listeners
+  MatchingSystem.cleanup();
+  
+  // Clear user data
+  gameState.user = null;
+  gameState.currentMatch = null;
+  gameState.matchId = null;
+  gameState.isHost = false;
+  gameState.score = 0;
+  gameState.opponentScore = 0;
+  gameState.currentRound = 0;
+  
+  // Clear localStorage
+  localStorage.removeItem('neoncrypt_user');
+  
+  // Reset timer
+  resetTimer();
+  
+  // Show welcome screen
+  showScreen('welcome-screen');
+  updateStatus('waiting');
+  
+  // Clear input fields
+  document.getElementById('nickname-input').value = '';
+  document.getElementById('country-input').value = '';
+  gameState.selectedCountry = null;
 }
 
 function showScreen(screenId) {
