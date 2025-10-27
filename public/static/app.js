@@ -61,7 +61,14 @@ const gameState = {
   difficulty: 'normal',
   currentRound: 0,
   score: 0,
-  countries: []
+  opponentScore: 0,
+  countries: [],
+  timer: {
+    startTime: null,
+    interval: null,
+    elapsed: 0
+  },
+  typingStarted: false
 };
 
 // Initialize app
@@ -80,6 +87,76 @@ function updateStatus(status) {
     statusIndicator.textContent = status;
     statusIndicator.style.color = status === 'idle' ? 'var(--neon-green)' : 'var(--neon-cyan)';
   }
+}
+
+// Timer functions
+function startTimer() {
+  if (gameState.timer.interval) return; // Already started
+  
+  gameState.timer.startTime = Date.now();
+  gameState.timer.elapsed = 0;
+  
+  gameState.timer.interval = setInterval(() => {
+    gameState.timer.elapsed = Math.floor((Date.now() - gameState.timer.startTime) / 1000);
+    updateTimerDisplay();
+  }, 100);
+}
+
+function stopTimer() {
+  if (gameState.timer.interval) {
+    clearInterval(gameState.timer.interval);
+    gameState.timer.interval = null;
+  }
+}
+
+function updateTimerDisplay() {
+  const minutes = Math.floor(gameState.timer.elapsed / 60);
+  const seconds = gameState.timer.elapsed % 60;
+  document.getElementById('timer-value').textContent = 
+    `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function resetTimer() {
+  stopTimer();
+  gameState.timer.elapsed = 0;
+  gameState.timer.startTime = null;
+  document.getElementById('timer-value').textContent = '0:00';
+}
+
+// Update score displays
+function updateScoreDisplay() {
+  document.getElementById('player-score').textContent = gameState.score;
+  document.getElementById('opponent-score').textContent = gameState.opponentScore;
+}
+
+// Simulate opponent progress (AI)
+function simulateOpponentProgress() {
+  const difficulty = gameState.difficulty;
+  let baseDelay, variance;
+  
+  switch(difficulty) {
+    case 'easy':
+      baseDelay = 3000; // 3 seconds
+      variance = 2000;
+      break;
+    case 'normal':
+      baseDelay = 2000; // 2 seconds
+      variance = 1500;
+      break;
+    case 'hard':
+      baseDelay = 1500; // 1.5 seconds
+      variance = 1000;
+      break;
+  }
+  
+  const delay = baseDelay + Math.random() * variance;
+  
+  setTimeout(() => {
+    if (gameState.currentRound > 0 && gameState.currentRound <= { easy: 1, normal: 2, hard: 3 }[gameState.difficulty]) {
+      gameState.opponentScore += 10;
+      updateScoreDisplay();
+    }
+  }, delay);
 }
 
 function setupEventListeners() {
@@ -280,9 +357,20 @@ async function startFriendBattle() {
 function startGame() {
   gameState.currentRound = 0;
   gameState.score = 0;
+  gameState.opponentScore = 0;
+  gameState.typingStarted = false;
   document.getElementById('game-menu').style.display = 'none';
   document.getElementById('game-play').style.display = 'block';
   updateStatus('playing');
+  
+  // Set opponent name
+  const opponentName = gameState.currentMatch?.opponent?.nickname || 'AI Bot';
+  document.getElementById('opponent-name').textContent = opponentName;
+  
+  // Reset scores display
+  document.getElementById('player-score').textContent = '0';
+  document.getElementById('opponent-score').textContent = '0';
+  
   nextRound();
 }
 
@@ -296,7 +384,10 @@ function nextRound() {
   
   gameState.currentRound++;
   document.getElementById('round-number').textContent = `Round ${gameState.currentRound}/${roundsNeeded}`;
-  document.getElementById('score-display').textContent = `Score: ${gameState.score}`;
+  updateScoreDisplay();
+  
+  // Reset typing started flag for this round
+  gameState.typingStarted = false;
   
   // Generate random sentence
   const sentence = generateRandomSentence();
@@ -307,6 +398,9 @@ function nextRound() {
   
   // Hide question section
   document.getElementById('question-section').style.display = 'none';
+  
+  // Simulate opponent typing (with random delay)
+  simulateOpponentProgress();
 }
 
 function generateRandomSentence() {
@@ -329,10 +423,16 @@ function handleTypingInput(e) {
   const input = e.target.value;
   const target = document.getElementById('sentence-display').textContent;
   
+  // Start timer on first character typed
+  if (!gameState.typingStarted && input.length === 1) {
+    gameState.typingStarted = true;
+    startTimer();
+  }
+  
   if (input === target) {
     playSound('correct');
     gameState.score += 10;
-    document.getElementById('score-display').textContent = `Score: ${gameState.score}`;
+    updateScoreDisplay();
     e.target.disabled = true;
     showQuestion();
   }
@@ -395,7 +495,14 @@ function handleAnswer(answer) {
   if (answer === gameState.currentQuestion.correct) {
     playSound('correct');
     gameState.score += 5;
-    document.getElementById('score-display').textContent = `Score: ${gameState.score}`;
+    updateScoreDisplay();
+    
+    // Simulate opponent answering question
+    setTimeout(() => {
+      gameState.opponentScore += 5;
+      updateScoreDisplay();
+    }, 500 + Math.random() * 1000);
+    
     nextRound();
   } else {
     playSound('wrong');
@@ -404,15 +511,25 @@ function handleAnswer(answer) {
 }
 
 async function endGame(won) {
+  stopTimer();
+  
   document.getElementById('game-play').style.display = 'none';
   document.getElementById('game-result').style.display = 'block';
   
   const resultTitle = document.getElementById('result-title');
   const resultScore = document.getElementById('result-score');
   
+  const finalTime = gameState.timer.elapsed;
+  const minutes = Math.floor(finalTime / 60);
+  const seconds = finalTime % 60;
+  
   resultTitle.textContent = won ? '🎉 VICTORY!' : '💥 DEFEAT';
   resultTitle.style.color = won ? '#00ff41' : '#ff0051';
-  resultScore.textContent = `Final Score: ${gameState.score}`;
+  resultScore.innerHTML = `
+    <div>Your Score: ${gameState.score}</div>
+    <div>Opponent Score: ${gameState.opponentScore}</div>
+    <div style="margin-top: 10px;">Time: ${minutes}:${seconds.toString().padStart(2, '0')}</div>
+  `;
   
   // Save result if world battle
   if (gameState.currentMatch && gameState.currentMatch.type === 'world') {
@@ -503,6 +620,9 @@ function showMainMenu() {
   document.getElementById('game-play').style.display = 'none';
   document.getElementById('game-result').style.display = 'none';
   updateStatus('ready');
+  
+  // Reset timer
+  resetTimer();
   
   if (gameState.user) {
     document.getElementById('player-info').innerHTML = `

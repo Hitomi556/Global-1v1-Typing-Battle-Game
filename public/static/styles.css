@@ -466,8 +466,8 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
   border-bottom: 1px solid var(--neon-purple);
 }
 
@@ -475,12 +475,85 @@ input[type="range"]::-webkit-slider-thumb {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.2rem;
   color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan);
 }
 
-.score-info {
+.timer-info {
   font-family: 'Orbitron', sans-serif;
   font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timer-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.timer-value {
   color: var(--neon-green);
+  font-weight: bold;
+  font-size: 1.3rem;
+  text-shadow: 0 0 15px var(--neon-green);
+  min-width: 60px;
+}
+
+/* Scores Container */
+.scores-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.player-score,
+.opponent-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--neon-green);
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+}
+
+.opponent-score {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 15px rgba(255, 0, 81, 0.3);
+}
+
+.score-label {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.score-value {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--neon-green);
+  text-shadow: 0 0 20px var(--neon-green);
+}
+
+.opponent-score .score-value {
+  color: var(--neon-pink);
+  text-shadow: 0 0 20px var(--neon-pink);
+}
+
+.vs-divider {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 20px var(--neon-cyan);
 }
 
 .typing-section {
@@ -713,6 +786,25 @@ input[type="range"]::-webkit-slider-thumb {
   .leaderboard-table th,
   .leaderboard-table td {
     padding: 10px 5px;
+  }
+  
+  .scores-container {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .player-score,
+  .opponent-score {
+    width: 100%;
+  }
+  
+  .vs-divider {
+    transform: rotate(90deg);
+  }
+  
+  .game-header {
+    flex-direction: column;
+    gap: 10px;
   }
 }
 

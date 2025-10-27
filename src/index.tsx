@@ -276,12 +276,6 @@ app.get('/', (c) => {
                     <div id="country-suggestions"></div>
                 </div>
 
-                <div class="difficulty-selector">
-                    <button class="difficulty-btn" data-difficulty="easy">Easy</button>
-                    <button class="difficulty-btn active" data-difficulty="normal">Normal</button>
-                    <button class="difficulty-btn" data-difficulty="hard">Hard</button>
-                </div>
-
                 <div class="btn-group">
                     <button class="neon-btn" id="random-match-btn">Random Match</button>
                     <button class="neon-btn secondary" id="friend-match-btn">Play with Friend</button>
@@ -319,7 +313,22 @@ app.get('/', (c) => {
                 <div id="game-play" class="game-play">
                     <div class="game-header">
                         <div class="round-info" id="round-number">Round 1/2</div>
-                        <div class="score-info" id="score-display">Score: 0</div>
+                        <div class="timer-info" id="timer-display">
+                            <span class="timer-label">Time:</span>
+                            <span class="timer-value" id="timer-value">0:00</span>
+                        </div>
+                    </div>
+                    
+                    <div class="scores-container">
+                        <div class="player-score">
+                            <span class="score-label">You</span>
+                            <span class="score-value" id="player-score">0</span>
+                        </div>
+                        <div class="vs-divider">VS</div>
+                        <div class="opponent-score">
+                            <span class="score-label" id="opponent-name">AI Bot</span>
+                            <span class="score-value" id="opponent-score">0</span>
+                        </div>
                     </div>
 
                     <!-- Typing Section -->
