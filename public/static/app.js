@@ -70,7 +70,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
   loadCountries();
   checkExistingUser();
+  updateStatus('idle');
 });
+
+// Status update helper
+function updateStatus(status) {
+  const statusIndicator = document.querySelector('.status-indicator');
+  if (statusIndicator) {
+    statusIndicator.textContent = status;
+    statusIndicator.style.color = status === 'idle' ? 'var(--neon-green)' : 'var(--neon-cyan)';
+  }
+}
 
 function setupEventListeners() {
   // Sound controls
@@ -175,8 +185,10 @@ function checkExistingUser() {
   if (user) {
     gameState.user = JSON.parse(user);
     showMainMenu();
+    updateStatus('ready');
   } else {
     showScreen('welcome-screen');
+    updateStatus('waiting');
   }
 }
 
@@ -270,6 +282,7 @@ function startGame() {
   gameState.score = 0;
   document.getElementById('game-menu').style.display = 'none';
   document.getElementById('game-play').style.display = 'block';
+  updateStatus('playing');
   nextRound();
 }
 
@@ -429,6 +442,7 @@ async function endGame(won) {
 
 async function showLeaderboard() {
   showScreen('leaderboard-screen');
+  updateStatus('viewing stats');
   
   try {
     const response = await fetch(`${API_BASE}/api/leaderboard`);
@@ -488,6 +502,7 @@ function showMainMenu() {
   document.getElementById('game-menu').style.display = 'block';
   document.getElementById('game-play').style.display = 'none';
   document.getElementById('game-result').style.display = 'none';
+  updateStatus('ready');
   
   if (gameState.user) {
     document.getElementById('player-info').innerHTML = `
