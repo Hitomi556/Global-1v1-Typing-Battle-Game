@@ -3,15 +3,16 @@ const API_BASE = '';
 const COUNTRIES_API = 'https://restcountries.com/v3.1';
 
 // Firebase Configuration
-// ユーザーはFirebase Consoleから取得したConfigをここに貼り付ける必要があります
+// Firebase Realtime Database for real-time matching
 const FIREBASE_CONFIG = {
-  apiKey: "REPLACE_WITH_YOUR_API_KEY",
-  authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN",
-  databaseURL: "REPLACE_WITH_YOUR_DATABASE_URL",
-  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
-  storageBucket: "REPLACE_WITH_YOUR_STORAGE_BUCKET",
-  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
-  appId: "REPLACE_WITH_YOUR_APP_ID"
+  apiKey: "AIzaSyAbRpwp0_GZPpllAyOibfvOf-8TWDWezM8",
+  authDomain: "neoncrypt-game.firebaseapp.com",
+  databaseURL: "https://neoncrypt-game-default-rtdb.firebaseio.com",
+  projectId: "neoncrypt-game",
+  storageBucket: "neoncrypt-game.firebasestorage.app",
+  messagingSenderId: "159940200017",
+  appId: "1:159940200017:web:de8697ec234915bef21a70",
+  measurementId: "G-08WB7F5D19"
 };
 
 let firebaseApp = null;
