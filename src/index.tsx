@@ -334,6 +334,16 @@ app.get('/', (c) => {
                 <p class="welcome-text" style="margin-top: 30px; font-size: 0.85rem;">
                     No account required — just a nickname.
                 </p>
+                
+                <!-- Live Leaderboard -->
+                <div class="live-leaderboard">
+                    <h3 class="leaderboard-title">
+                        <i class="fas fa-trophy"></i> Top 5 Countries
+                    </h3>
+                    <div id="welcome-leaderboard" class="welcome-leaderboard-content">
+                        <div class="loading-text">Loading rankings...</div>
+                    </div>
+                </div>
             </div>
         </div>
 

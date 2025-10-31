@@ -324,6 +324,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSounds();
   setupEventListeners();
   loadCountries();
+  loadWelcomeLeaderboard();
   checkExistingUser();
   updateStatus('idle');
 });
@@ -472,6 +473,50 @@ async function loadCountries() {
     console.error('Failed to load countries:', error);
     document.getElementById('country-suggestions').innerHTML = 
       '<div class="error-text">Could not load countries</div>';
+  }
+}
+
+async function loadWelcomeLeaderboard() {
+  try {
+    const response = await fetch(`${API_BASE}/api/leaderboard`);
+    const data = await response.json();
+    
+    const container = document.getElementById('welcome-leaderboard');
+    
+    // Use today's data, fallback to last 7 days if no data today
+    let topCountries = data.today && data.today.length > 0 ? data.today : data.last7days;
+    
+    if (!topCountries || topCountries.length === 0) {
+      container.innerHTML = '<div class="no-data-text">No rankings yet. Be the first to play!</div>';
+      return;
+    }
+    
+    // Get top 5
+    topCountries = topCountries.slice(0, 5);
+    
+    container.innerHTML = topCountries.map((country, index) => {
+      const rank = index + 1;
+      const rankClass = `rank-${rank}`;
+      
+      return `
+        <div class="leaderboard-item">
+          <div class="rank-number ${rankClass}">#${rank}</div>
+          <img src="https://flagcdn.com/48x36/${country.country_code.toLowerCase()}.png" 
+               alt="${country.country_name}" 
+               class="country-flag-large"
+               onerror="this.src='https://flagcdn.com/48x36/un.png'">
+          <div class="country-name-large">${country.country_name}</div>
+          <div class="win-rate-large">${country.win_rate}%</div>
+        </div>
+      `;
+    }).join('');
+    
+    // Auto-refresh every 30 seconds
+    setTimeout(loadWelcomeLeaderboard, 30000);
+  } catch (error) {
+    console.error('Failed to load welcome leaderboard:', error);
+    document.getElementById('welcome-leaderboard').innerHTML = 
+      '<div class="no-data-text">Unable to load rankings</div>';
   }
 }
 
