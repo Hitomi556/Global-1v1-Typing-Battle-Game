@@ -32,6 +32,13 @@ Realtime Databaseの「ルール」タブで以下のルールを設定：
         ".indexOn": ["difficulty", "status", "timestamp"]
       }
     },
+    "rooms": {
+      ".read": true,
+      ".write": true,
+      "$roomCode": {
+        ".indexOn": ["status", "createdAt"]
+      }
+    },
     "games": {
       ".read": true,
       ".write": true,

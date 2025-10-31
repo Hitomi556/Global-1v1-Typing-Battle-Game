@@ -123,7 +123,8 @@ const gameState = {
   isHost: false,
   opponentConnected: false,
   gameDataRef: null,
-  listeners: []
+  listeners: [],
+  roomListener: null
 };
 
 // Matching system using Firebase
@@ -430,8 +431,15 @@ function setupEventListeners() {
   
   // Game buttons
   document.getElementById('random-match-btn').addEventListener('click', startWorldBattle);
-  document.getElementById('friend-match-btn').addEventListener('click', startFriendBattle);
+  document.getElementById('friend-match-btn').addEventListener('click', openFriendRoomModal);
   document.getElementById('start-game-btn').addEventListener('click', startGame);
+  
+  // Friend room modal
+  document.getElementById('create-room-btn').addEventListener('click', createFriendRoom);
+  document.getElementById('join-room-btn').addEventListener('click', showJoinRoomSection);
+  document.getElementById('join-room-submit-btn').addEventListener('click', joinFriendRoom);
+  document.getElementById('close-modal-btn').addEventListener('click', closeFriendRoomModal);
+  document.getElementById('copy-code-btn').addEventListener('click', copyRoomCode);
   
   // Typing input
   document.getElementById('typing-input').addEventListener('input', handleTypingInput);
@@ -600,7 +608,12 @@ async function startWorldBattle() {
   }
 }
 
-async function startFriendBattle() {
+// Friend room functions
+function generateRoomCode() {
+  return Math.random().toString(36).substring(2, 8).toUpperCase();
+}
+
+function openFriendRoomModal() {
   const nickname = document.getElementById('nickname-input').value.trim();
   
   if (!nickname) {
@@ -613,6 +626,7 @@ async function startFriendBattle() {
     return;
   }
   
+  // Save user data
   gameState.user = {
     id: `friend_${Date.now()}`,
     nickname,
@@ -621,14 +635,223 @@ async function startFriendBattle() {
   };
   localStorage.setItem('neoncrypt_user', JSON.stringify(gameState.user));
   
+  // Show modal
+  document.getElementById('friend-room-modal').style.display = 'flex';
+  document.getElementById('create-room-section').style.display = 'none';
+  document.getElementById('join-room-section').style.display = 'none';
+  document.querySelector('.room-options').style.display = 'grid';
+}
+
+function closeFriendRoomModal() {
+  document.getElementById('friend-room-modal').style.display = 'none';
+  
+  // Cleanup room listener if exists
+  if (gameState.roomListener) {
+    gameState.roomListener.off();
+    gameState.roomListener = null;
+  }
+}
+
+async function createFriendRoom() {
+  if (!database) {
+    alert('Firebase not configured. Cannot create friend rooms.');
+    return;
+  }
+  
+  const roomCode = generateRoomCode();
+  const roomRef = database.ref(`rooms/${roomCode}`);
+  
+  // Create room
+  await roomRef.set({
+    code: roomCode,
+    host: {
+      id: gameState.user.id,
+      nickname: gameState.user.nickname,
+      country: gameState.user.countryCode
+    },
+    guest: null,
+    status: 'waiting',
+    difficulty: gameState.difficulty,
+    createdAt: Date.now()
+  });
+  
+  // Show room code
+  document.querySelector('.room-options').style.display = 'none';
+  document.getElementById('create-room-section').style.display = 'block';
+  document.getElementById('room-code-display').value = roomCode;
+  
+  // Listen for guest joining
+  gameState.roomListener = roomRef.on('value', async (snapshot) => {
+    const room = snapshot.val();
+    
+    if (room && room.guest) {
+      // Guest joined!
+      document.getElementById('room-status').textContent = `${room.guest.nickname} joined! Starting game...`;
+      document.getElementById('room-status').style.color = 'var(--neon-green)';
+      
+      // Remove listener
+      roomRef.off();
+      gameState.roomListener = null;
+      
+      // Create game
+      const gameRef = database.ref(`games/${roomCode}`);
+      await gameRef.set({
+        status: 'ready',
+        difficulty: room.difficulty,
+        player1: {
+          id: room.host.id,
+          nickname: room.host.nickname,
+          country: room.host.country,
+          score: 0,
+          round: 0,
+          ready: false
+        },
+        player2: {
+          id: room.guest.id,
+          nickname: room.guest.nickname,
+          country: room.guest.country,
+          score: 0,
+          round: 0,
+          ready: false
+        },
+        createdAt: Date.now()
+      });
+      
+      gameState.currentMatch = {
+        type: 'friend',
+        difficulty: room.difficulty,
+        opponent: {
+          type: 'player',
+          nickname: room.guest.nickname,
+          country: room.guest.country
+        },
+        matchId: roomCode,
+        isHost: true,
+        realtime: true
+      };
+      
+      gameState.matchId = roomCode;
+      gameState.isHost = true;
+      
+      // Setup Firebase listeners
+      await MatchingSystem.setupGameListeners(roomCode, true);
+      
+      // Close modal and start game
+      closeFriendRoomModal();
+      showScreen('game-screen');
+      showMainMenu();
+      updateStatus('matched!');
+    }
+  });
+}
+
+function showJoinRoomSection() {
+  document.querySelector('.room-options').style.display = 'none';
+  document.getElementById('join-room-section').style.display = 'block';
+  document.getElementById('room-code-input').value = '';
+  document.getElementById('room-code-input').focus();
+}
+
+async function joinFriendRoom() {
+  if (!database) {
+    alert('Firebase not configured. Cannot join friend rooms.');
+    return;
+  }
+  
+  const roomCode = document.getElementById('room-code-input').value.trim().toUpperCase();
+  
+  if (roomCode.length !== 6) {
+    alert('Please enter a valid 6-character room code');
+    return;
+  }
+  
+  const roomRef = database.ref(`rooms/${roomCode}`);
+  const snapshot = await roomRef.once('value');
+  const room = snapshot.val();
+  
+  if (!room) {
+    alert('Room not found. Please check the code and try again.');
+    return;
+  }
+  
+  if (room.status !== 'waiting') {
+    alert('This room is no longer available.');
+    return;
+  }
+  
+  // Join room
+  await roomRef.update({
+    guest: {
+      id: gameState.user.id,
+      nickname: gameState.user.nickname,
+      country: gameState.user.countryCode
+    },
+    status: 'matched'
+  });
+  
   gameState.currentMatch = {
     type: 'friend',
-    difficulty: gameState.difficulty,
-    opponent: { type: 'friend', nickname: 'Friend' }
+    difficulty: room.difficulty,
+    opponent: {
+      type: 'player',
+      nickname: room.host.nickname,
+      country: room.host.country
+    },
+    matchId: roomCode,
+    isHost: false,
+    realtime: true
   };
   
+  gameState.matchId = roomCode;
+  gameState.isHost = false;
+  gameState.difficulty = room.difficulty;
+  
+  // Wait for game to be created by host
+  const gameRef = database.ref(`games/${roomCode}`);
+  const gameSnapshot = await new Promise((resolve) => {
+    const listener = gameRef.on('value', (snapshot) => {
+      if (snapshot.val()) {
+        gameRef.off('value', listener);
+        resolve(snapshot);
+      }
+    });
+    
+    // Timeout after 10 seconds
+    setTimeout(() => {
+      gameRef.off('value', listener);
+      resolve(null);
+    }, 10000);
+  });
+  
+  if (!gameSnapshot) {
+    alert('Failed to join game. Please try again.');
+    return;
+  }
+  
+  // Setup Firebase listeners
+  await MatchingSystem.setupGameListeners(roomCode, false);
+  
+  // Close modal and start game
+  closeFriendRoomModal();
   showScreen('game-screen');
   showMainMenu();
+  updateStatus('matched!');
+}
+
+function copyRoomCode() {
+  const codeInput = document.getElementById('room-code-display');
+  codeInput.select();
+  document.execCommand('copy');
+  
+  const copyBtn = document.getElementById('copy-code-btn');
+  const originalText = copyBtn.innerHTML;
+  copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+  copyBtn.style.background = 'rgba(0, 255, 65, 0.2)';
+  
+  setTimeout(() => {
+    copyBtn.innerHTML = originalText;
+    copyBtn.style.background = 'rgba(0, 255, 65, 0.1)';
+  }, 2000);
 }
 
 async function startGame() {

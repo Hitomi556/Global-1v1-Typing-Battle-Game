@@ -292,6 +292,44 @@ app.get('/', (c) => {
                     <button class="neon-btn" id="random-match-btn">Random Match</button>
                     <button class="neon-btn secondary" id="friend-match-btn">Play with Friend</button>
                 </div>
+                
+                <!-- Friend Room Modal -->
+                <div id="friend-room-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <h3 class="modal-title">Play with Friend</h3>
+                        <div class="modal-body">
+                            <div class="room-options">
+                                <button class="room-option-btn" id="create-room-btn">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span>Create Room</span>
+                                </button>
+                                <button class="room-option-btn" id="join-room-btn">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span>Join Room</span>
+                                </button>
+                            </div>
+                            
+                            <div id="create-room-section" style="display: none;">
+                                <p class="room-instruction">Share this code with your friend:</p>
+                                <div class="room-code-display">
+                                    <input type="text" id="room-code-display" class="room-code-input" readonly>
+                                    <button class="copy-btn" id="copy-code-btn">
+                                        <i class="fas fa-copy"></i> Copy
+                                    </button>
+                                </div>
+                                <p class="room-status" id="room-status">Waiting for friend to join...</p>
+                            </div>
+                            
+                            <div id="join-room-section" style="display: none;">
+                                <p class="room-instruction">Enter your friend's room code:</p>
+                                <input type="text" id="room-code-input" class="neon-input" 
+                                       placeholder="Enter 6-digit code" maxlength="6">
+                                <button class="neon-btn" id="join-room-submit-btn">Join Room</button>
+                            </div>
+                        </div>
+                        <button class="modal-close-btn" id="close-modal-btn">Close</button>
+                    </div>
+                </div>
 
                 <p class="welcome-text" style="margin-top: 30px; font-size: 0.85rem;">
                     No account required — just a nickname.
