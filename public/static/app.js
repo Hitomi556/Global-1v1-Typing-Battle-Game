@@ -124,7 +124,8 @@ const gameState = {
   opponentConnected: false,
   gameDataRef: null,
   listeners: [],
-  roomListener: null
+  roomListener: null,
+  currentRiddle: null
 };
 
 // Matching system using Firebase
@@ -898,14 +899,16 @@ function nextRound() {
   // Reset typing started flag for this round
   gameState.typingStarted = false;
   
-  // Generate random sentence
-  const sentence = generateRandomSentence();
-  document.getElementById('sentence-display').textContent = sentence;
+  // Generate random riddle
+  const riddle = generateRandomRiddle();
+  gameState.currentRiddle = riddle;
+  
+  document.getElementById('sentence-display').textContent = riddle.riddle;
   document.getElementById('typing-input').value = '';
   document.getElementById('typing-input').disabled = false;
   document.getElementById('typing-input').focus();
   
-  // Hide question section
+  // Hide question section (will show answers after typing)
   document.getElementById('question-section').style.display = 'none';
   
   // Simulate opponent typing only in AI mode
@@ -914,20 +917,87 @@ function nextRound() {
   }
 }
 
-function generateRandomSentence() {
-  const sentences = [
-    "The quick brown fox jumps over the lazy dog.",
-    "Pack my box with five dozen liquor jugs.",
-    "How vexingly quick daft zebras jump!",
-    "Sphinx of black quartz, judge my vow.",
-    "Two driven jocks help fax my big quiz.",
-    "Five quacking zephyrs jolt my wax bed.",
-    "The five boxing wizards jump quickly.",
-    "Jackdaws love my big sphinx of quartz.",
-    "Mr. Jock, TV quiz PhD, bags few lynx.",
-    "Waltz, bad nymph, for quick jigs vex."
+// Riddle database - typing challenge is the riddle itself
+function generateRandomRiddle() {
+  const riddles = [
+    {
+      riddle: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+      answers: ["Echo", "Shadow", "Mirror", "Dream"],
+      correct: "Echo"
+    },
+    {
+      riddle: "The more you take, the more you leave behind. What am I?",
+      answers: ["Footsteps", "Time", "Memory", "Breath"],
+      correct: "Footsteps"
+    },
+    {
+      riddle: "I have cities, but no houses. I have mountains, but no trees. I have water, but no fish. What am I?",
+      answers: ["Map", "Globe", "Atlas", "Book"],
+      correct: "Map"
+    },
+    {
+      riddle: "What has keys but no locks, space but no room, and you can enter but can't go inside?",
+      answers: ["Keyboard", "Piano", "House", "Computer"],
+      correct: "Keyboard"
+    },
+    {
+      riddle: "I'm tall when I'm young, and I'm short when I'm old. What am I?",
+      answers: ["Candle", "Tree", "Person", "Building"],
+      correct: "Candle"
+    },
+    {
+      riddle: "What can travel around the world while staying in a corner?",
+      answers: ["Stamp", "Letter", "Email", "Postcard"],
+      correct: "Stamp"
+    },
+    {
+      riddle: "What has a head and a tail but no body?",
+      answers: ["Coin", "Snake", "Arrow", "Comet"],
+      correct: "Coin"
+    },
+    {
+      riddle: "What gets wet while drying?",
+      answers: ["Towel", "Sponge", "Paper", "Cloth"],
+      correct: "Towel"
+    },
+    {
+      riddle: "I have branches, but no fruit, trunk, or leaves. What am I?",
+      answers: ["Bank", "River", "Tree", "Road"],
+      correct: "Bank"
+    },
+    {
+      riddle: "What can fill a room but takes up no space?",
+      answers: ["Light", "Air", "Sound", "Darkness"],
+      correct: "Light"
+    },
+    {
+      riddle: "What runs but never walks, has a mouth but never talks, has a bed but never sleeps?",
+      answers: ["River", "Clock", "Road", "Wind"],
+      correct: "River"
+    },
+    {
+      riddle: "The more of this there is, the less you see. What is it?",
+      answers: ["Darkness", "Fog", "Smoke", "Shadow"],
+      correct: "Darkness"
+    },
+    {
+      riddle: "What has hands but cannot clap?",
+      answers: ["Clock", "Doll", "Statue", "Glove"],
+      correct: "Clock"
+    },
+    {
+      riddle: "I'm light as a feather, yet the strongest person can't hold me for five minutes. What am I?",
+      answers: ["Breath", "Air", "Thought", "Time"],
+      correct: "Breath"
+    },
+    {
+      riddle: "What begins with T, ends with T, and has T in it?",
+      answers: ["Teapot", "Text", "Tent", "Treat"],
+      correct: "Teapot"
+    }
   ];
-  return sentences[Math.floor(Math.random() * sentences.length)];
+  
+  return riddles[Math.floor(Math.random() * riddles.length)];
 }
 
 async function handleTypingInput(e) {
@@ -961,42 +1031,14 @@ function showQuestion() {
   const questionSection = document.getElementById('question-section');
   questionSection.style.display = 'block';
   
-  // Generate random question
-  const questions = [
-    {
-      question: "What is 15 + 27?",
-      answers: ["42", "41", "43", "40"],
-      correct: "42"
-    },
-    {
-      question: "Capital of France?",
-      answers: ["Paris", "London", "Berlin", "Madrid"],
-      correct: "Paris"
-    },
-    {
-      question: "2^5 = ?",
-      answers: ["32", "16", "64", "25"],
-      correct: "32"
-    },
-    {
-      question: "HTML stands for?",
-      answers: ["HyperText Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlinks and Text Markup Language"],
-      correct: "HyperText Markup Language"
-    },
-    {
-      question: "Largest ocean?",
-      answers: ["Pacific", "Atlantic", "Indian", "Arctic"],
-      correct: "Pacific"
-    }
-  ];
+  // Use the current riddle's answers
+  const riddle = gameState.currentRiddle;
   
-  const q = questions[Math.floor(Math.random() * questions.length)];
-  gameState.currentQuestion = q;
-  
-  document.getElementById('question-text').textContent = q.question;
+  // Show "Select your answer:" as the question prompt
+  document.getElementById('question-text').textContent = "Select your answer:";
   
   const buttons = document.querySelectorAll('.answer-btn');
-  q.answers.forEach((answer, i) => {
+  riddle.answers.forEach((answer, i) => {
     if (buttons[i]) {
       buttons[i].textContent = answer;
       buttons[i].dataset.answer = answer;
@@ -1005,13 +1047,13 @@ function showQuestion() {
   });
   
   // Hide extra buttons if less than 4 answers
-  for (let i = q.answers.length; i < 4; i++) {
+  for (let i = riddle.answers.length; i < 4; i++) {
     if (buttons[i]) buttons[i].style.display = 'none';
   }
 }
 
 async function handleAnswer(answer) {
-  if (answer === gameState.currentQuestion.correct) {
+  if (answer === gameState.currentRiddle.correct) {
     playSound('correct');
     gameState.score += 5;
     updateScoreDisplay();
