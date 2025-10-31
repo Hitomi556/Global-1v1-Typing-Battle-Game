@@ -401,7 +401,7 @@ app.get('/', (c) => {
                             The quick brown fox jumps over the lazy dog.
                         </div>
                         <input type="text" id="typing-input" class="typing-input" 
-                               placeholder="Type the sentence exactly...">
+                               placeholder="Type the sentence exactly..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
                     </div>
 
                     <!-- Question Section -->

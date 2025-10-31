@@ -125,7 +125,8 @@ const gameState = {
   gameDataRef: null,
   listeners: [],
   roomListener: null,
-  currentRiddle: null
+  currentRiddle: null,
+  targetText: ''
 };
 
 // Matching system using Firebase
@@ -947,8 +948,11 @@ function nextRound() {
   // Generate random riddle
   const riddle = generateRandomRiddle();
   gameState.currentRiddle = riddle;
+  gameState.targetText = riddle.riddle;
   
-  document.getElementById('sentence-display').textContent = riddle.riddle;
+  // Initialize sentence display with individual characters
+  updateSentenceDisplay('');
+  
   document.getElementById('typing-input').value = '';
   document.getElementById('typing-input').disabled = false;
   document.getElementById('typing-input').focus();
@@ -1045,9 +1049,37 @@ function generateRandomRiddle() {
   return riddles[Math.floor(Math.random() * riddles.length)];
 }
 
+// Update sentence display with colored characters
+function updateSentenceDisplay(userInput) {
+  const target = gameState.targetText;
+  const display = document.getElementById('sentence-display');
+  
+  let html = '';
+  
+  for (let i = 0; i < target.length; i++) {
+    const char = target[i];
+    
+    if (i < userInput.length) {
+      // User has typed this character
+      if (userInput[i] === char) {
+        // Correct character
+        html += `<span class="char-correct">${char}</span>`;
+      } else {
+        // Incorrect character
+        html += `<span class="char-incorrect">${char}</span>`;
+      }
+    } else {
+      // User hasn't typed this character yet
+      html += `<span class="char-pending">${char}</span>`;
+    }
+  }
+  
+  display.innerHTML = html;
+}
+
 async function handleTypingInput(e) {
   const input = e.target.value;
-  const target = document.getElementById('sentence-display').textContent;
+  const target = gameState.targetText;
   
   // Start timer on first character typed
   if (!gameState.typingStarted && input.length === 1) {
@@ -1055,6 +1087,20 @@ async function handleTypingInput(e) {
     startTimer();
   }
   
+  // Update display with colors
+  updateSentenceDisplay(input);
+  
+  // Check if input matches target (play error sound only on new error)
+  if (input.length > 0) {
+    const lastChar = input[input.length - 1];
+    const targetChar = target[input.length - 1];
+    
+    if (lastChar !== targetChar) {
+      playSound('wrong');
+    }
+  }
+  
+  // If complete and correct
   if (input === target) {
     playSound('correct');
     gameState.score += 10;

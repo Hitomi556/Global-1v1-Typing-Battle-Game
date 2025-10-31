@@ -713,6 +713,31 @@ input[type="range"]::-webkit-slider-thumb {
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.sentence-display .char-correct {
+  color: var(--neon-green);
+  text-shadow: 0 0 5px var(--neon-green);
+}
+
+.sentence-display .char-incorrect {
+  color: var(--neon-pink);
+  background: rgba(255, 0, 81, 0.2);
+  text-shadow: 0 0 10px var(--neon-pink);
+  animation: shake 0.3s;
+}
+
+.sentence-display .char-pending {
+  color: var(--neon-cyan);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
 }
 
 .typing-input {
