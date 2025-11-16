@@ -276,8 +276,9 @@
 - ✅ 全ページにGA4タグを実装
 - ✅ ページビュー自動トラッキング
 - ✅ プライバシーポリシーに記載済み
-- ⚠️ 測定ID（`G-XXXXXXXXXX`）を実際のIDに置き換える必要があります
-- 📖 詳細は `GOOGLE_ANALYTICS_SETUP.md` を参照
+- ✅ **測定ID設定完了**: `G-ETV8QH6M5G`
+- ✅ 本番環境で稼働中
+- 📊 [Google Analyticsダッシュボード](https://analytics.google.com/)で確認可能
 
 #### Google Search Console
 - ✅ 確認用メタタグを実装
