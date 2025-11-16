@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "webapp",
+  "name": "neoncrypt",
   "compatibility_date": "2025-10-27",
   "pages_build_output_dir": "./dist",
   "compatibility_flags": [
@@ -25,7 +25,7 @@
     {
       "binding": "DB",
       "database_name": "neoncrypt-production",
-      "database_id": "your-database-id-here"
+      "database_id": "2aba0ff3-8f57-4c20-97ee-9b8fc2496d3e"
     }
   ],
   // "ai": {

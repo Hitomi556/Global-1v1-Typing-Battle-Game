@@ -24,7 +24,7 @@ Allow: /
 Disallow: /api/
 
 # Sitemap
-Sitemap: https://your-project.pages.dev/sitemap.xml
+Sitemap: https://neoncrypt.pages.dev/sitemap.xml
 
 # Common crawlers
 User-agent: Googlebot
@@ -53,32 +53,32 @@ app.get('/sitemap.xml', async (c) => {
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://your-project.pages.dev/</loc>
-    <lastmod>2025-10-31</lastmod>
+    <loc>https://neoncrypt.pages.dev/</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://your-project.pages.dev/credits</loc>
-    <lastmod>2025-10-31</lastmod>
+    <loc>https://neoncrypt.pages.dev/credits</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://your-project.pages.dev/terms</loc>
-    <lastmod>2025-10-31</lastmod>
+    <loc>https://neoncrypt.pages.dev/terms</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://your-project.pages.dev/privacy</loc>
-    <lastmod>2025-10-31</lastmod>
+    <loc>https://neoncrypt.pages.dev/privacy</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://your-project.pages.dev/cookies</loc>
-    <lastmod>2025-10-31</lastmod>
+    <loc>https://neoncrypt.pages.dev/cookies</loc>
+    <lastmod>2025-11-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
