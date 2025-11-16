@@ -14,6 +14,78 @@ app.use('/api/*', cors())
 // Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
+// Serve robots.txt
+app.get('/robots.txt', async (c) => {
+  const text = `# NeonCrypt - Global Typing Battle Game
+# Robots.txt
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://your-project.pages.dev/sitemap.xml
+
+# Common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+# Crawl-delay for all bots
+Crawl-delay: 1`;
+  return c.text(text, 200, { 'Content-Type': 'text/plain' });
+})
+
+// Serve sitemap.xml
+app.get('/sitemap.xml', async (c) => {
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://your-project.pages.dev/</loc>
+    <lastmod>2025-10-31</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://your-project.pages.dev/credits</loc>
+    <lastmod>2025-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://your-project.pages.dev/terms</loc>
+    <lastmod>2025-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://your-project.pages.dev/privacy</loc>
+    <lastmod>2025-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://your-project.pages.dev/cookies</loc>
+    <lastmod>2025-10-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+</urlset>`;
+  return c.text(xml, 200, { 'Content-Type': 'application/xml' });
+})
+
 // Helper function to generate user ID
 function generateUserId(nickname: string, countryCode: string): string {
   return `${countryCode}_${nickname}_${Date.now()}`.replace(/\s+/g, '_').toLowerCase();
@@ -226,6 +298,27 @@ app.get('/', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="NeonCrypt - Global 1v1 typing and puzzle battle game. Compete with players worldwide in real-time matches with riddles and typing challenges.">
+    <meta name="keywords" content="typing game, puzzle game, online game, multiplayer, riddles, cyberpunk, typing battle">
+    <meta name="author" content="NeonCrypt Team">
+    
+    <!-- Google Search Console Verification -->
+    <!-- Replace YOUR_VERIFICATION_CODE with your actual verification code from Google Search Console -->
+    <meta name="google-site-verification" content="YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE">
+    
+    <!-- Google Analytics 4 -->
+    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'page_title': 'NeonCrypt - Home',
+        'page_location': window.location.href
+      });
+    </script>
+    
     <title>NEONCRYPT - Global Typing Battle</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -484,6 +577,19 @@ app.get('/credits', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'page_title': 'Credits - NeonCrypt',
+        'page_location': window.location.href
+      });
+    </script>
+    
     <title>Credits - NEONCRYPT</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -549,6 +655,19 @@ app.get('/terms', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'page_title': 'Terms of Service - NeonCrypt',
+        'page_location': window.location.href
+      });
+    </script>
+    
     <title>Terms of Service - NEONCRYPT</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -634,6 +753,19 @@ app.get('/privacy', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'page_title': 'Privacy Policy - NeonCrypt',
+        'page_location': window.location.href
+      });
+    </script>
+    
     <title>Privacy Policy - NEONCRYPT</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -692,6 +824,7 @@ app.get('/privacy', (c) => {
                 <ul class="legal-list">
                     <li><strong>Cloudflare:</strong> Hosting and content delivery (<a href="https://www.cloudflare.com/privacypolicy/" target="_blank">Privacy Policy</a>)</li>
                     <li><strong>Firebase:</strong> Real-time database (<a href="https://firebase.google.com/support/privacy" target="_blank">Privacy Policy</a>)</li>
+                    <li><strong>Google Analytics:</strong> Website analytics and user behavior tracking (<a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a>)</li>
                     <li><strong>REST Countries API:</strong> Country information</li>
                     <li><strong>Google Fonts:</strong> Web fonts (<a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a>)</li>
                 </ul>
@@ -699,7 +832,15 @@ app.get('/privacy', (c) => {
 
             <section class="legal-section">
                 <h2>5. Cookies and Tracking</h2>
-                <p>We use browser local storage (not cookies) to save your preferences. See our <a href="/cookies">Cookie Policy</a> for more details.</p>
+                <p>We use browser local storage to save your preferences and Google Analytics to track website usage patterns. Google Analytics may set cookies to collect anonymous usage data such as:</p>
+                <ul class="legal-list">
+                    <li>Pages visited and time spent on each page</li>
+                    <li>Device type and browser information</li>
+                    <li>Geographic location (country/city level)</li>
+                    <li>Traffic sources and user flow</li>
+                </ul>
+                <p>You can opt-out of Google Analytics tracking by installing the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Google Analytics Opt-out Browser Add-on</a>.</p>
+                <p>For more details, see our <a href="/cookies">Cookie Policy</a>.</p>
             </section>
 
             <section class="legal-section">
@@ -757,6 +898,19 @@ app.get('/cookies', (c) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX', {
+        'page_title': 'Cookie Policy - NeonCrypt',
+        'page_location': window.location.href
+      });
+    </script>
+    
     <title>Cookie Policy - NEONCRYPT</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -803,7 +957,18 @@ app.get('/cookies', (c) => {
                 <p>Firebase may use cookies for authentication and analytics purposes.</p>
                 <p>Learn more: <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy</a></p>
 
-                <h3>3.3 Google Fonts</h3>
+                <h3>3.3 Google Analytics</h3>
+                <p>Google Analytics uses cookies to collect anonymous usage statistics including:</p>
+                <ul class="legal-list">
+                    <li><strong>_ga:</strong> Distinguishes unique users (expires in 2 years)</li>
+                    <li><strong>_gid:</strong> Distinguishes unique users (expires in 24 hours)</li>
+                    <li><strong>_gat:</strong> Throttles request rate (expires in 1 minute)</li>
+                </ul>
+                <p>This helps us understand how users interact with our game and improve the experience.</p>
+                <p>Learn more: <a href="https://policies.google.com/technologies/cookies" target="_blank">Google Cookie Policy</a></p>
+                <p>Opt-out: <a href="https://tools.google.com/dlpage/gaoptout" target="_blank">Google Analytics Opt-out Add-on</a></p>
+
+                <h3>3.4 Google Fonts</h3>
                 <p>Google Fonts may set cookies when loading web fonts.</p>
                 <p>Learn more: <a href="https://policies.google.com/technologies/cookies" target="_blank">Google Cookie Policy</a></p>
             </section>
@@ -834,6 +999,11 @@ app.get('/cookies', (c) => {
                             <td>Performance</td>
                             <td>CDN optimization (Cloudflare)</td>
                             <td>Varies by service</td>
+                        </tr>
+                        <tr>
+                            <td>Analytics</td>
+                            <td>Usage tracking (Google Analytics)</td>
+                            <td>1 minute to 2 years</td>
                         </tr>
                     </tbody>
                 </table>
