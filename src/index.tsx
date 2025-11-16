@@ -454,7 +454,441 @@ app.get('/', (c) => {
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="/credits" class="footer-link">Credits</a>
+                <a href="/terms" class="footer-link">Terms of Service</a>
+                <a href="/privacy" class="footer-link">Privacy Policy</a>
+                <a href="/cookies" class="footer-link">Cookie Policy</a>
+                <a href="mailto:neoncrypt.game@gmail.com" class="footer-link">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                © 2025 NeonCrypt. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     <script src="/static/app.js"></script>
+</body>
+</html>
+  `)
+})
+
+// Credits page
+app.get('/credits', (c) => {
+  return c.html(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credits - NEONCRYPT</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">NEONCRYPT</h1>
+        </header>
+
+        <div class="legal-content">
+            <h1 class="legal-title">Credits & Acknowledgments</h1>
+            
+            <section class="legal-section">
+                <h2>Development</h2>
+                <p><strong>NeonCrypt</strong> is developed and maintained by the NeonCrypt Team.</p>
+                <p>Contact: <a href="mailto:neoncrypt.game@gmail.com">neoncrypt.game@gmail.com</a></p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Technologies Used</h2>
+                <ul class="legal-list">
+                    <li><strong>Hono</strong> - Fast web framework for Cloudflare Workers</li>
+                    <li><strong>Cloudflare Pages</strong> - Edge deployment platform</li>
+                    <li><strong>Cloudflare D1</strong> - Distributed SQLite database</li>
+                    <li><strong>Firebase Realtime Database</strong> - Real-time data synchronization</li>
+                    <li><strong>REST Countries API</strong> - Country information and flags</li>
+                    <li><strong>Font Awesome</strong> - Icons (<a href="https://fontawesome.com/license/free" target="_blank">License</a>)</li>
+                    <li><strong>Google Fonts</strong> - Orbitron and Share Tech Mono fonts</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>Riddles & Content</h2>
+                <p>The riddles and puzzles in this game are compiled from various public domain sources and original creations. We respect intellectual property rights and do not claim ownership of traditional riddles in the public domain.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Open Source Libraries</h2>
+                <p>This project uses various open source software libraries. We thank all contributors to the open source community.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>Special Thanks</h2>
+                <p>To all players worldwide who make this game possible through their participation and feedback.</p>
+            </section>
+
+            <div class="btn-group">
+                <a href="/" class="neon-btn">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `)
+})
+
+// Terms of Service page
+app.get('/terms', (c) => {
+  return c.html(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - NEONCRYPT</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">NEONCRYPT</h1>
+        </header>
+
+        <div class="legal-content">
+            <h1 class="legal-title">Terms of Service</h1>
+            <p class="legal-update">Last Updated: October 31, 2025</p>
+            
+            <section class="legal-section">
+                <h2>1. Acceptance of Terms</h2>
+                <p>By accessing and using NeonCrypt ("the Service"), you accept and agree to be bound by the terms and provisions of this agreement. If you do not agree to these terms, please do not use the Service.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>2. Description of Service</h2>
+                <p>NeonCrypt is a free online typing and puzzle battle game that allows users to compete against other players or AI opponents in real-time matches.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>3. User Conduct</h2>
+                <p>You agree not to:</p>
+                <ul class="legal-list">
+                    <li>Use offensive, inappropriate, or abusive nicknames</li>
+                    <li>Attempt to hack, disrupt, or exploit the game systems</li>
+                    <li>Use automated bots or scripts to play the game</li>
+                    <li>Harass, bully, or negatively target other players</li>
+                    <li>Engage in any activity that violates applicable laws</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Account and Data</h2>
+                <p>NeonCrypt does not require account registration. User data (nickname and country) is stored locally in your browser and may be transmitted to our servers for gameplay purposes.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Intellectual Property</h2>
+                <p>All content, features, and functionality of the Service are owned by NeonCrypt and are protected by international copyright, trademark, and other intellectual property laws.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Limitation of Liability</h2>
+                <p>The Service is provided "as is" without warranties of any kind. NeonCrypt shall not be liable for any damages arising from the use or inability to use the Service.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Changes to Terms</h2>
+                <p>We reserve the right to modify these terms at any time. Continued use of the Service after changes constitutes acceptance of the new terms.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>8. Termination</h2>
+                <p>We reserve the right to terminate or suspend access to the Service immediately, without prior notice, for any reason, including breach of these Terms.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>9. Contact Information</h2>
+                <p>For questions about these Terms, please contact us at:</p>
+                <p><a href="mailto:neoncrypt.game@gmail.com">neoncrypt.game@gmail.com</a></p>
+            </section>
+
+            <div class="btn-group">
+                <a href="/" class="neon-btn">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `)
+})
+
+// Privacy Policy page
+app.get('/privacy', (c) => {
+  return c.html(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - NEONCRYPT</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">NEONCRYPT</h1>
+        </header>
+
+        <div class="legal-content">
+            <h1 class="legal-title">Privacy Policy</h1>
+            <p class="legal-update">Last Updated: October 31, 2025</p>
+            
+            <section class="legal-section">
+                <h2>1. Information We Collect</h2>
+                
+                <h3>1.1 Information You Provide</h3>
+                <ul class="legal-list">
+                    <li><strong>Nickname:</strong> A display name you choose for gameplay</li>
+                    <li><strong>Country:</strong> Your selected country for leaderboard purposes</li>
+                </ul>
+
+                <h3>1.2 Automatically Collected Information</h3>
+                <ul class="legal-list">
+                    <li><strong>Game Statistics:</strong> Match results, scores, completion times</li>
+                    <li><strong>Technical Data:</strong> Browser type, device information, IP address (for security)</li>
+                    <li><strong>Usage Data:</strong> Game interactions, feature usage patterns</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>2. How We Use Your Information</h2>
+                <p>We use collected information to:</p>
+                <ul class="legal-list">
+                    <li>Provide and maintain the game service</li>
+                    <li>Match you with other players in real-time</li>
+                    <li>Display leaderboards and country rankings</li>
+                    <li>Prevent cheating and enforce daily play limits</li>
+                    <li>Improve game features and user experience</li>
+                    <li>Communicate about service updates (if you contact us)</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>3. Data Storage and Security</h2>
+                <p><strong>Local Storage:</strong> Your nickname and country preferences are stored in your browser's local storage.</p>
+                <p><strong>Server Storage:</strong> Game results and statistics are stored securely in our Cloudflare D1 database.</p>
+                <p><strong>Firebase:</strong> Real-time match data is temporarily stored in Firebase Realtime Database during active games.</p>
+                <p><strong>Security:</strong> We implement reasonable security measures to protect your data, but no method of transmission over the internet is 100% secure.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Third-Party Services</h2>
+                <p>We use the following third-party services:</p>
+                <ul class="legal-list">
+                    <li><strong>Cloudflare:</strong> Hosting and content delivery (<a href="https://www.cloudflare.com/privacypolicy/" target="_blank">Privacy Policy</a>)</li>
+                    <li><strong>Firebase:</strong> Real-time database (<a href="https://firebase.google.com/support/privacy" target="_blank">Privacy Policy</a>)</li>
+                    <li><strong>REST Countries API:</strong> Country information</li>
+                    <li><strong>Google Fonts:</strong> Web fonts (<a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a>)</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Cookies and Tracking</h2>
+                <p>We use browser local storage (not cookies) to save your preferences. See our <a href="/cookies">Cookie Policy</a> for more details.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Data Retention</h2>
+                <p>Game statistics and leaderboard data are retained indefinitely to maintain historical rankings. You can clear your local data by clearing your browser's local storage.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul class="legal-list">
+                    <li>Access your personal data</li>
+                    <li>Request deletion of your data (contact us)</li>
+                    <li>Stop using the service at any time</li>
+                    <li>Clear your browser's local storage</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>8. Children's Privacy</h2>
+                <p>NeonCrypt is not directed to children under 13. We do not knowingly collect personal information from children under 13. If you believe we have collected such information, please contact us.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>9. International Data Transfers</h2>
+                <p>Your data may be processed in various countries where Cloudflare's edge network operates. By using the Service, you consent to such transfers.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>10. Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. Changes will be posted on this page with an updated "Last Updated" date.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>11. Contact Us</h2>
+                <p>For privacy-related questions or requests, contact us at:</p>
+                <p><a href="mailto:neoncrypt.game@gmail.com">neoncrypt.game@gmail.com</a></p>
+            </section>
+
+            <div class="btn-group">
+                <a href="/" class="neon-btn">Back to Home</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+  `)
+})
+
+// Cookie Policy page
+app.get('/cookies', (c) => {
+  return c.html(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Policy - NEONCRYPT</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="logo">NEONCRYPT</h1>
+        </header>
+
+        <div class="legal-content">
+            <h1 class="legal-title">Cookie Policy</h1>
+            <p class="legal-update">Last Updated: October 31, 2025</p>
+            
+            <section class="legal-section">
+                <h2>1. What Are Cookies?</h2>
+                <p>Cookies are small text files stored on your device by websites you visit. They are widely used to make websites work more efficiently and provide information to website owners.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>2. How NeonCrypt Uses Storage</h2>
+                <p><strong>Important:</strong> NeonCrypt primarily uses <strong>Local Storage</strong> rather than traditional cookies.</p>
+                
+                <h3>2.1 Local Storage</h3>
+                <p>We use browser Local Storage to save:</p>
+                <ul class="legal-list">
+                    <li><strong>User ID:</strong> A unique identifier generated for your gameplay</li>
+                    <li><strong>Nickname:</strong> Your chosen display name</li>
+                    <li><strong>Country:</strong> Your selected country</li>
+                    <li><strong>Sound Preferences:</strong> Volume and on/off settings</li>
+                </ul>
+                <p><em>Purpose:</em> To remember your preferences and prevent you from re-entering information every visit.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>3. Third-Party Cookies</h2>
+                <p>Third-party services we use may set their own cookies:</p>
+                
+                <h3>3.1 Cloudflare</h3>
+                <p>Cloudflare may use cookies for security, performance optimization, and DDoS protection.</p>
+                <p>Learn more: <a href="https://www.cloudflare.com/cookie-policy/" target="_blank">Cloudflare Cookie Policy</a></p>
+
+                <h3>3.2 Firebase</h3>
+                <p>Firebase may use cookies for authentication and analytics purposes.</p>
+                <p>Learn more: <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase Privacy</a></p>
+
+                <h3>3.3 Google Fonts</h3>
+                <p>Google Fonts may set cookies when loading web fonts.</p>
+                <p>Learn more: <a href="https://policies.google.com/technologies/cookies" target="_blank">Google Cookie Policy</a></p>
+            </section>
+
+            <section class="legal-section">
+                <h2>4. Types of Data We Store</h2>
+                
+                <table class="legal-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>Purpose</th>
+                            <th>Duration</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Strictly Necessary</td>
+                            <td>User identification, preferences</td>
+                            <td>Permanent (until cleared)</td>
+                        </tr>
+                        <tr>
+                            <td>Functionality</td>
+                            <td>Sound settings, game state</td>
+                            <td>Permanent (until cleared)</td>
+                        </tr>
+                        <tr>
+                            <td>Performance</td>
+                            <td>CDN optimization (Cloudflare)</td>
+                            <td>Varies by service</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="legal-section">
+                <h2>5. Managing Your Storage Preferences</h2>
+                
+                <h3>5.1 Clear Local Storage</h3>
+                <p><strong>Chrome/Edge:</strong></p>
+                <ol class="legal-list">
+                    <li>Press F12 to open Developer Tools</li>
+                    <li>Go to "Application" tab</li>
+                    <li>Click "Local Storage" → Select the website</li>
+                    <li>Right-click and select "Clear"</li>
+                </ol>
+
+                <p><strong>Firefox:</strong></p>
+                <ol class="legal-list">
+                    <li>Press F12 to open Developer Tools</li>
+                    <li>Go to "Storage" tab</li>
+                    <li>Click "Local Storage" → Select the website</li>
+                    <li>Right-click and select "Delete All"</li>
+                </ol>
+
+                <h3>5.2 Disable Cookies (Third-Party)</h3>
+                <p>You can configure your browser to refuse cookies, but this may affect website functionality:</p>
+                <ul class="legal-list">
+                    <li><strong>Chrome:</strong> Settings → Privacy and security → Cookies and other site data</li>
+                    <li><strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data</li>
+                    <li><strong>Safari:</strong> Preferences → Privacy → Cookies and website data</li>
+                </ul>
+            </section>
+
+            <section class="legal-section">
+                <h2>6. Do Not Track Signals</h2>
+                <p>NeonCrypt does not track users across different websites. We only collect data necessary for gameplay within our service.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>7. Updates to This Policy</h2>
+                <p>We may update this Cookie Policy to reflect changes in technology or legal requirements. Please review this page periodically.</p>
+            </section>
+
+            <section class="legal-section">
+                <h2>8. Contact Us</h2>
+                <p>For questions about cookies and data storage, contact us at:</p>
+                <p><a href="mailto:neoncrypt.game@gmail.com">neoncrypt.game@gmail.com</a></p>
+            </section>
+
+            <div class="btn-group">
+                <a href="/" class="neon-btn">Back to Home</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
   `)
