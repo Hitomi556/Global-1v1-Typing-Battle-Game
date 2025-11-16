@@ -262,6 +262,24 @@
 - **フォント**: Orbitron, Share Tech Mono
 - **外部API**: REST Countries API
 - **デプロイ**: Cloudflare Pages + Wrangler
+- **アナリティクス**: Google Analytics 4
+- **SEO**: Google Search Console対応
+
+### SEO・アナリティクス設定
+
+#### Google Analytics 4
+- ✅ 全ページにGA4タグを実装
+- ✅ ページビュー自動トラッキング
+- ✅ プライバシーポリシーに記載済み
+- ⚠️ 測定ID（`G-XXXXXXXXXX`）を実際のIDに置き換える必要があります
+- 📖 詳細は `GOOGLE_ANALYTICS_SETUP.md` を参照
+
+#### Google Search Console
+- ✅ 確認用メタタグを実装
+- ⚠️ 確認コードを実際のコードに置き換える必要があります
+- ✅ Sitemap.xml実装済み（`/sitemap.xml`）
+- ✅ Robots.txt実装済み（`/robots.txt`）
+- 📖 詳細は `GOOGLE_ANALYTICS_SETUP.md` を参照
 
 ### 最終更新
 - **日付**: 2025-10-31
@@ -269,6 +287,8 @@
   - 謎解きデータベースを15問から300問に拡張（5カテゴリ、各50問）
   - 法的文書ページを追加（利用規約、プライバシーポリシー、Cookieポリシー、クレジット表記）
   - フッターとお問い合わせ先（neoncrypt.game@gmail.com）を追加
+  - Google Analytics 4とSearch Console対応を実装
+  - SEOファイル（sitemap.xml, robots.txt）を追加
 
 ## 開発コマンド
 
