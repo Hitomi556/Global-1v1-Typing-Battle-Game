@@ -155,12 +155,14 @@
 
 ## URLs
 
+### 本番環境 🌐
+- **メインURL**: https://neoncrypt.pages.dev
+- **Sitemap**: https://neoncrypt.pages.dev/sitemap.xml
+- **Robots.txt**: https://neoncrypt.pages.dev/robots.txt
+- **GitHub**: https://github.com/Hitomi556/Global-1v1-Typing-Battle-Game
+
 ### 開発環境
 - **ローカル開発**: https://3000-ikc557wguicxugfvxwd98-3844e1b6.sandbox.novita.ai
-- **API Base**: Same as above
-
-### 本番環境
-- **本番デプロイ**: 未デプロイ（Cloudflare Pagesにデプロイ可能）
 
 ## データアーキテクチャ
 
@@ -253,7 +255,10 @@
 
 ### ステータス
 - ✅ ローカル開発環境: 稼働中
-- ❌ 本番環境: 未デプロイ
+- ✅ **本番環境: デプロイ済み** 🚀
+  - URL: https://neoncrypt.pages.dev
+  - プラットフォーム: Cloudflare Pages
+  - データベース: Cloudflare D1 (neoncrypt-production)
 
 ### 技術スタック
 - **バックエンド**: Hono (v4.10.3)
@@ -282,13 +287,15 @@
 - 📖 詳細は `GOOGLE_ANALYTICS_SETUP.md` を参照
 
 ### 最終更新
-- **日付**: 2025-10-31
+- **日付**: 2025-11-16
 - **最新の変更**: 
+  - 🚀 **本番環境にデプロイ完了**: https://neoncrypt.pages.dev
   - 謎解きデータベースを15問から300問に拡張（5カテゴリ、各50問）
   - 法的文書ページを追加（利用規約、プライバシーポリシー、Cookieポリシー、クレジット表記）
   - フッターとお問い合わせ先（neoncrypt.game@gmail.com）を追加
   - Google Analytics 4とSearch Console対応を実装
   - SEOファイル（sitemap.xml, robots.txt）を追加
+  - Cloudflare D1本番データベース構築完了
 
 ## 開発コマンド
 
