@@ -307,13 +307,12 @@ app.get('/', (c) => {
     <meta name="google-site-verification" content="YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE">
     
     <!-- Google Analytics 4 -->
-    <!-- Replace G-XXXXXXXXXX with your actual GA4 Measurement ID -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
+      gtag('config', 'G-ETV8QH6M5G', {
         'page_title': 'NeonCrypt - Home',
         'page_location': window.location.href
       });
@@ -579,12 +578,12 @@ app.get('/credits', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
+      gtag('config', 'G-ETV8QH6M5G', {
         'page_title': 'Credits - NeonCrypt',
         'page_location': window.location.href
       });
@@ -657,12 +656,12 @@ app.get('/terms', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
+      gtag('config', 'G-ETV8QH6M5G', {
         'page_title': 'Terms of Service - NeonCrypt',
         'page_location': window.location.href
       });
@@ -755,12 +754,12 @@ app.get('/privacy', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
+      gtag('config', 'G-ETV8QH6M5G', {
         'page_title': 'Privacy Policy - NeonCrypt',
         'page_location': window.location.href
       });
@@ -900,12 +899,12 @@ app.get('/cookies', (c) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Analytics 4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX', {
+      gtag('config', 'G-ETV8QH6M5G', {
         'page_title': 'Cookie Policy - NeonCrypt',
         'page_location': window.location.href
       });
