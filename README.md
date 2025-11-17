@@ -281,11 +281,11 @@
 - 📊 [Google Analyticsダッシュボード](https://analytics.google.com/)で確認可能
 
 #### Google Search Console
-- ✅ 確認用メタタグを実装
-- ⚠️ 確認コードを実際のコードに置き換える必要があります
-- ✅ Sitemap.xml実装済み（`/sitemap.xml`）
-- ✅ Robots.txt実装済み（`/robots.txt`）
-- 📖 詳細は `GOOGLE_ANALYTICS_SETUP.md` を参照
+- ✅ 確認用メタタグを実装・デプロイ済み
+- ✅ **確認コード設定完了**: `xkunl3eETtudt4LDfec90V_7X7ek0Psu3WNqMejZvHc`
+- ✅ Sitemap.xml実装済み（https://neoncrypt.pages.dev/sitemap.xml）
+- ✅ Robots.txt実装済み（https://neoncrypt.pages.dev/robots.txt）
+- 🔍 [Google Search Console](https://search.google.com/search-console/)で「確認」ボタンをクリックしてください
 
 ### 最終更新
 - **日付**: 2025-11-16
