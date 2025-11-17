@@ -303,8 +303,7 @@ app.get('/', (c) => {
     <meta name="author" content="NeonCrypt Team">
     
     <!-- Google Search Console Verification -->
-    <!-- Replace YOUR_VERIFICATION_CODE with your actual verification code from Google Search Console -->
-    <meta name="google-site-verification" content="YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE">
+    <meta name="google-site-verification" content="xkunl3eETtudt4LDfec90V_7X7ek0Psu3WNqMejZvHc">
     
     <!-- Google Analytics 4 -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ETV8QH6M5G"></script>
