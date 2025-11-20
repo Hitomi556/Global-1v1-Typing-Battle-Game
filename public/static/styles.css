@@ -702,20 +702,21 @@ input[type="range"]::-webkit-slider-thumb {
 
 .sentence-display {
   font-size: 1.3rem;
-  line-height: 1.8;
+  line-height: 2;
   color: var(--neon-cyan);
   text-align: center;
-  padding: 30px;
+  padding: 40px 30px;
   background: rgba(0, 255, 255, 0.05);
   border: 1px solid var(--neon-cyan);
   margin-bottom: 20px;
-  min-height: 100px;
+  min-height: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Share Tech Mono', monospace;
   white-space: pre-wrap;
   word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .sentence-display .char-correct {
@@ -765,10 +766,19 @@ input[type="range"]::-webkit-slider-thumb {
 
 .question-text {
   font-size: 1.2rem;
+  line-height: 1.8;
   color: var(--neon-pink);
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  padding: 20px;
   text-shadow: 0 0 10px var(--neon-pink);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .answers-grid {
@@ -1012,6 +1022,20 @@ input[type="range"]::-webkit-slider-thumb {
   
   .rank-number {
     font-size: 1.2rem;
+  }
+  
+  .sentence-display {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    padding: 30px 20px;
+    min-height: 120px;
+  }
+  
+  .question-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    padding: 15px;
+    min-height: 70px;
   }
   
   .country-flag-large {
